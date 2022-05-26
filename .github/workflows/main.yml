@@ -1,0 +1,29 @@
+name: Sync Upstream-Appharu
+
+env:
+  # Required, URL to upstream (fork base)
+  UPSTREAM_URL: "https://github.com/yeasy/docker_practice.git"
+  WORKFLOW_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
+  # Optional, defaults to main
+  UPSTREAM_BRANCH: "master"
+  # OPTIONAL. 
+  DOWNSTERAM_BRANCH: "master"
+
+# This runs every day on 1801 UTC
+on:
+  schedule:
+    - cron: '30 16 * * *'
+  # Allows manual workflow run (must in default branch to work)
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: GitHub Sync to Upstream Repository
+        uses: dabreadman/sync-upstream-repo@v1.1.0.b
+        with: 
+          upstream_repo: ${{ env.UPSTREAM_URL }}
+          upstream_branch: ${{ env.UPSTREAM_BRANCH }}
+          downstream_branch: ${{ env.DOWNSTREAM_BRANCH }}
+          token: ${{ secrets.GITHUB_TOKEN }}
